@@ -17,6 +17,8 @@ public static class IServiceCollectionExtensions {
             .AddSingleton<Commands>()
             .AddSingleton<ICommandStarter>(sp => sp.GetRequiredService<Commands>())
             .AddSingleton<IFinishedCommands>(sp => sp.GetRequiredService<Commands>())
-            .AddSingleton<IWaitingCommands>(sp => sp.GetRequiredService<Commands>());
+            .AddSingleton<IWaitingCommands>(sp => sp.GetRequiredService<Commands>())
+            .AddSingleton<IFinishCommands>(sp => sp.GetRequiredService<Commands>())
+            .AddSingleton<IProcessingCommands>(sp => sp.GetRequiredService<Commands>());
     }
 }

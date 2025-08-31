@@ -24,4 +24,4 @@ Console.WriteLine(foo.Random);
 var pollingCommand = sp.GetRequiredService<IPollingCommand>();
 var result = await pollingCommand.Execute<FooCommand>();
 
-Console.WriteLine(result.NewId);
+Console.WriteLine(result?.NewId.ToString() ?? "<null>");
