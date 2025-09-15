@@ -4,9 +4,10 @@ using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand;
 using Sample.Shared;
+using System.Net.Http.Headers;
+using System.Text;
 
 var services = new ServiceCollection()
-    .AddHttpClient()
     .AddCsla(
         o => o.AddConsoleApp().DataPortal(
             dp => dp.AddClientSideDataPortal(
@@ -16,12 +17,23 @@ var services = new ServiceCollection()
     )
     .AddPollingCommandClient();
 
-using var sp = services.BuildServiceProvider();
+services.AddHttpClient("", cfg => {
+    var base64 = Convert.ToBase64String(Encoding.ASCII.GetBytes("Test:Test"));
+    cfg.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64);
+});
+
+await using var sp = services.BuildServiceProvider();
+
+await Task.Delay(TimeSpan.FromSeconds(2));
 
 var foo = await sp.GetRequiredService<IDataPortal<Foo>>().CreateAsync();
 Console.WriteLine(foo.Random);
-
+ 
 var pollingCommand = sp.GetRequiredService<IPollingCommand>();
 var result = await pollingCommand.Execute<FooCommand>();
 
-Console.WriteLine(result?.NewId.ToString() ?? "<null>");
+Console.WriteLine("Returned from server...");
+Console.WriteLine(result.NewId.ToString() ?? "<null>");
+Console.WriteLine($"Username: {result.UserName}");
+
+Console.ReadKey();

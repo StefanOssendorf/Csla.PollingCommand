@@ -1,13 +1,14 @@
-﻿using Ossendorf.Csla.PollingCommand.Client;
+﻿using Csla.Serialization;
+using Ossendorf.Csla.PollingCommand.Client;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.Threading.Channels;
 
 namespace Ossendorf.Csla.PollingCommand.Server;
 
 internal class Commands : ICommandStarter, IWaitingCommands, IFinishedCommands, IProcessingCommands, IFinishCommands {
-
     private readonly ConcurrentDictionary<Guid, object?> _beingProcessed = new();
     private readonly ConcurrentDictionary<Guid, FinishedCommand> _finishedCommands = new();
     private readonly Channel<QueuedCommand> _channel = Channel.CreateUnbounded<QueuedCommand>(new UnboundedChannelOptions {
@@ -15,9 +16,9 @@ internal class Commands : ICommandStarter, IWaitingCommands, IFinishedCommands, 
         SingleWriter = true
     });
 
+    async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyCollection<object?> parameters, byte[] principal) {
+        var item = new QueuedCommand(commandType, [.. parameters.Where(p => p is not NoCommandParameters)], principal);
 
-    async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyCollection<object?> parameters) {
-        var item = new QueuedCommand(commandType, [.. parameters.Where(p => p is not NoCommandParameters)]);
         _beingProcessed.TryAdd(item.CorrelationId, null);
         await _channel.Writer.WriteAsync(item);
         return item.CorrelationId;
