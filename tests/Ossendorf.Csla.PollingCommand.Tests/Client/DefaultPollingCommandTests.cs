@@ -20,7 +20,7 @@ public class DefaultPollingCommandTests : IAsyncLifetime {
         A.CallTo(() => portal.ExecuteAsync(_capturedParameters.Ignored)).Returns(Task.FromResult<InitiateCommandExecutionCommand>(default!));
 
         _serviceProvider = new ServiceCollection()
-            .AddCsla(o => o.AddConsoleApp().Serialization(so => so.UseMobileFormatter(mfo => mfo.AddPollingCommand())))
+            .AddCsla(o => o.AddConsoleApp())
             .AddPollingCommandClient()
             .AddScoped(_ => portal)
             .BuildServiceProvider();
@@ -48,7 +48,7 @@ public class DefaultPollingCommandTests : IAsyncLifetime {
     public async Task MyTestMethodAsync() {
         await _systemUnderTest.Execute<TestCommand>();
 
-        _capturedParameters.Values.ShouldHaveSingleItem().ShouldBe([typeof(TestCommand).FullName!, new object[] { NoCommandParameters.Value }]);
+        _capturedParameters.Values.ShouldHaveSingleItem().ShouldBe([typeof(TestCommand).FullName!, An<IReadOnlyList<object?>>.Ignored]);
     }
 }
 

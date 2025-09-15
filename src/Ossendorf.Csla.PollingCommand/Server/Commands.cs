@@ -16,8 +16,8 @@ internal class Commands : ICommandStarter, IWaitingCommands, IFinishedCommands, 
         SingleWriter = true
     });
 
-    async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyCollection<object?> parameters, byte[] principal) {
-        var item = new QueuedCommand(commandType, [.. parameters.Where(p => p is not NoCommandParameters)], principal);
+    async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyList<object?> parameters, byte[] principal) {
+        var item = new QueuedCommand(commandType, parameters, principal);
 
         _beingProcessed.TryAdd(item.CorrelationId, null);
         await _channel.Writer.WriteAsync(item);

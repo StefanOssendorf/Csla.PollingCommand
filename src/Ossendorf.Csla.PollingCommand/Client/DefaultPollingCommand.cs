@@ -12,7 +12,7 @@ internal class DefaultPollingCommand : IPollingCommand {
         _pollStateCommand = pollStateCommand;
     }
 
-    public Task<T> Execute<T>() where T : CommandBase<T> => Execute<T>(NoCommandParameters.Value);
+    public Task<T> Execute<T>() where T : CommandBase<T> => Execute<T>([]);
 
     public async Task<T> Execute<T>(params object[] executeParameters) where T : CommandBase<T> {
         var correlationId = (await _initiatePortal.InitiateExecution(typeof(T).AssemblyQualifiedName!, [.. executeParameters])).CorrelationId;
