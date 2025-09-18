@@ -4,6 +4,8 @@
     <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="AwesomeAssertions" Version="9.1.0" />
+    <PackageVersion Include="AwesomeAssertions.Analyzers" Version="9.0.3" />
     <PackageVersion Include="Csla" Version="9.1.0" />
     <PackageVersion Include="Csla.AspNetCore" Version="9.1.0" />
     <PackageVersion Include="Csla.Generator.AutoImplementProperties.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
@@ -16,6 +18,8 @@
     <PackageVersion Include="Ossendorf.Csla.DataPortalExtensionGenerator" Version="1.0.1" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
+    <PackageVersion Include="TUnit" Version="0.57.65" />
+    <PackageVersion Include="Xunit.OpenCategories.V3" Version="2.3.0.12" />
     <PackageVersion Include="xunit.v3" Version="2.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
   </ItemGroup>

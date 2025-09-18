@@ -25,9 +25,6 @@ services.AddHttpClient("", cfg => {
 await using var sp = services.BuildServiceProvider();
 
 await Task.Delay(TimeSpan.FromSeconds(2));
-
-var foo = await sp.GetRequiredService<IDataPortal<Foo>>().CreateAsync();
-Console.WriteLine(foo.Random);
  
 var pollingCommand = sp.GetRequiredService<IPollingCommand>();
 var result = await pollingCommand.Execute<FooCommand>();
@@ -37,3 +34,10 @@ Console.WriteLine(result.NewId.ToString() ?? "<null>");
 Console.WriteLine($"Username: {result.UserName}");
 
 Console.ReadKey();
+
+try {
+    var result2 = await pollingCommand.Execute<ErroringCommand>();
+} catch (Exception e) {
+    Console.WriteLine(e);
+    Console.WriteLine(e.Message);
+}
