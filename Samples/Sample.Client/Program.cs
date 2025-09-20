@@ -15,7 +15,7 @@ var services = new ServiceCollection()
             )
         )
     )
-    .AddPollingCommandClient();
+    .AddPollingCommandClient(TimeSpan.FromMilliseconds(250));
 
 services.AddHttpClient("", cfg => {
     var base64 = Convert.ToBase64String(Encoding.ASCII.GetBytes("Test:Test"));
