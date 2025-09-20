@@ -8,8 +8,14 @@ namespace Ossendorf.Csla.PollingCommand;
 /// Provides extension methods for <see cref="IServiceCollection"/>
 /// </summary>
 public static class IServiceCollectionExtensions {
-    public static IServiceCollection AddPollingCommandClient(this IServiceCollection services) {
-        return services.AddTransient<IPollingCommand, DefaultPollingCommand>();
+    public static IServiceCollection AddPollingCommandClient(this IServiceCollection services, TimeSpan pollingInterval) {
+        if (pollingInterval == Timeout.InfiniteTimeSpan) {
+            throw new ArgumentOutOfRangeException(nameof(pollingInterval), $"The polling interval must not be {nameof(Timeout)}.{nameof(Timeout.InfiniteTimeSpan)}");
+        }
+
+        services.AddTransient<IPollingCommand, DefaultPollingCommand>();
+        services.AddOptions<DefaultPollingOptions>().Configure(o => o.Interval = pollingInterval);
+        return services;
     }
 
     public static IServiceCollection AddPollingCommandServer(this IServiceCollection services) {
