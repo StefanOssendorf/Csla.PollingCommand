@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Client;
 using Ossendorf.Csla.PollingCommand.Server;
+using System.Threading.Channels;
 
 namespace Ossendorf.Csla.PollingCommand;
 
@@ -25,6 +26,10 @@ public static class IServiceCollectionExtensions {
             .AddSingleton<IFinishedCommands>(sp => sp.GetRequiredService<Commands>())
             .AddSingleton<IWaitingCommands>(sp => sp.GetRequiredService<Commands>())
             .AddSingleton<IFinishCommands>(sp => sp.GetRequiredService<Commands>())
-            .AddSingleton<IProcessingCommands>(sp => sp.GetRequiredService<Commands>());
+            .AddSingleton<IProcessingCommands>(sp => sp.GetRequiredService<Commands>())
+            .AddSingleton(Channel.CreateUnbounded<QueuedCommand>(new UnboundedChannelOptions {
+                SingleReader = true,
+                SingleWriter = true
+            }));
     }
 }

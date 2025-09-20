@@ -1,9 +1,6 @@
-﻿using Csla.Serialization;
-using Ossendorf.Csla.PollingCommand.Client;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Security.Principal;
 using System.Threading.Channels;
 
 namespace Ossendorf.Csla.PollingCommand.Server;
@@ -11,10 +8,11 @@ namespace Ossendorf.Csla.PollingCommand.Server;
 internal class Commands : ICommandStarter, IWaitingCommands, IFinishedCommands, IProcessingCommands, IFinishCommands {
     private readonly ConcurrentDictionary<Guid, object?> _beingProcessed = new();
     private readonly ConcurrentDictionary<Guid, FinishedCommand> _finishedCommands = new();
-    private readonly Channel<QueuedCommand> _channel = Channel.CreateUnbounded<QueuedCommand>(new UnboundedChannelOptions {
-        SingleReader = true,
-        SingleWriter = true
-    });
+    private readonly Channel<QueuedCommand> _channel;
+
+    public Commands(Channel<QueuedCommand> channel) {
+        _channel = channel;
+    }
 
     async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyList<object?> parameters, byte[] principal) {
         var item = new QueuedCommand(commandType, parameters, principal);
