@@ -21,6 +21,7 @@ public static class IServiceCollectionExtensions {
 
     public static IServiceCollection AddPollingCommandServer(this IServiceCollection services) {
         return services.AddHostedService<CommandExecutionHostedService>()
+            .AddSingleton<ICommandExecutionProcessor, CommandExecutionProcessor>()
             .AddSingleton<Commands>()
             .AddSingleton<ICommandStarter>(sp => sp.GetRequiredService<Commands>())
             .AddSingleton<IFinishedCommands>(sp => sp.GetRequiredService<Commands>())

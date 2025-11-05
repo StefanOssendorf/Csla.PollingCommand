@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Csla" />
     <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" />
-    <PackageReference Include="Ossendorf.Csla.DataPortalExtensionGenerator" />
+    <PackageReference Include="Ossendorf.Csla.DataPortalExtensionGenerator" PrivateAssets="all" ExcludeAssets="runtime" />
   </ItemGroup>
 
   <ItemGroup>

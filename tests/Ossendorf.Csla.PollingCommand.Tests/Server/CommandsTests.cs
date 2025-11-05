@@ -3,7 +3,6 @@ using AwesomeAssertions.Execution;
 using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Server;
-using Ossendorf.Csla.PollingCommand.Tests.Client;
 using System.Threading.Channels;
 
 namespace Ossendorf.Csla.PollingCommand.Tests.Server;
@@ -12,6 +11,10 @@ public class CommandsTests {
     private readonly ServiceProvider _serviceProvider;
     private readonly Commands _systemUnderTest;
     private readonly Channel<QueuedCommand> _commandQueue;
+
+    private ICommandStarter SutCommandStarter => _systemUnderTest;
+    private IWaitingCommands SutWaitingCommands => _systemUnderTest;
+    private IProcessingCommands SutProcessingCommands => _systemUnderTest;
 
     public CommandsTests() {
         _serviceProvider = new ServiceCollection()
@@ -28,7 +31,7 @@ public class CommandsTests {
 
     [Test, DisplayName("When starting a command it must be written to the processing queue with the returned correlation id.")]
     public async Task Start_Testcase01() {
-        var correlationId = await ((ICommandStarter)_systemUnderTest).Start(typeof(EmptyCommand), [], []);
+        var correlationId = await SutCommandStarter.Start(typeof(EmptyCommand), [], []);
 
         _commandQueue.Writer.Complete();
         using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
@@ -51,18 +54,18 @@ public class CommandsTests {
         _commandQueue.Writer.Complete();
 
         using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-        var readItems = ((IWaitingCommands)_systemUnderTest).ReadQueued(cts.Token).ToBlockingEnumerable().ToList();
+        var readItems = SutWaitingCommands.ReadQueued(cts.Token).ToBlockingEnumerable().ToList();
 
         readItems.Should().ContainSingle().Which.Should().Be(queuedItem);
     }
 
     [Test, DisplayName("When checking for a correclation id which is currently not being processed it must return false.")]
-    public void IsBeingProcessed_Testcase01() => ((IProcessingCommands)_systemUnderTest).IsBeingProcessed(Guid.NewGuid()).Should().BeFalse();
+    public void IsBeingProcessed_Testcase01() => SutProcessingCommands.IsBeingProcessed(Guid.NewGuid()).Should().BeFalse();
 
     [Test, DisplayName("When checking for a correclation id which is currently being processed it must return true.")]
     public async Task IsBeingProcessed_Testcase02() {
-        var correcltionId = await ((ICommandStarter)_systemUnderTest).Start(typeof(EmptyCommand), [], []);
+        var correcltionId = await SutCommandStarter.Start(typeof(EmptyCommand), [], []);
 
-        ((IProcessingCommands)_systemUnderTest).IsBeingProcessed(correcltionId).Should().BeFalse();
+        SutProcessingCommands.IsBeingProcessed(correcltionId).Should().BeTrue();
     }
 }

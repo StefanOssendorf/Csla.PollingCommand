@@ -21,6 +21,10 @@ internal partial class PollStateOrResultCommand : CommandBase<PollStateOrResultC
             State = ProcessingState.Running;
         } else if (finishedCommands.TryTake(correlationId, out var result)) {
             State = ProcessingState.Finished;
+            if (!result.HasResult) {
+                result.Error.Throw();
+            }
+
             Result = result;
         } else {
             State = ProcessingState.Unknown;

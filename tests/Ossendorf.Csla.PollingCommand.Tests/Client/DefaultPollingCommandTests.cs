@@ -7,6 +7,7 @@ using Csla.Serialization;
 using FakeItEasy;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Server;
+using System.Runtime.ExceptionServices;
 using System.Security.Claims;
 
 namespace Ossendorf.Csla.PollingCommand.Tests.Client;
@@ -63,7 +64,7 @@ public class DefaultPollingCommandTests {
         A.CallTo(() => _processingCommands.IsBeingProcessed(correlationId)).ReturnsNextFromSequence(true, false);
 
         const string exceptionMessage = "This is a test exception";
-        var processingResult = FinishedCommand.Fail(correlationId, new InvalidOperationException(exceptionMessage));
+        var processingResult = FinishedCommand.Fail(correlationId, ExceptionDispatchInfo.Capture(new InvalidOperationException(exceptionMessage)));
         A.CallTo(() => _finishedCommands.TryTake(correlationId, out processingResult)).Returns(true);
 
         await FluentActions.Awaiting(_systemUnderTest.Execute<EmptyCommand>).Should().ThrowAsync<InvalidOperationException>().WithMessage(exceptionMessage);

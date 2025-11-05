@@ -32,9 +32,7 @@ internal class DefaultPollingCommand : IPollingCommand {
                 if (commandResult.HasResult) {
                     return (T)commandResult.Result;
                 }
-
-                throw commandResult.Error;
-            }else if (!result.IsRunning) {
+            } else if (!result.IsRunning) {
                 throw new InvalidOperationException($"Should never happen!");
             }
 
