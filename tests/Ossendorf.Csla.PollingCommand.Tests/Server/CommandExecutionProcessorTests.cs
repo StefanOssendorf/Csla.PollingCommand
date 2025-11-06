@@ -3,6 +3,7 @@ using AwesomeAssertions.Execution;
 using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Server;
+using System.Runtime.ExceptionServices;
 
 namespace Ossendorf.Csla.PollingCommand.Tests.Server;
 
@@ -43,7 +44,7 @@ public class CommandExecutionProcessorTests {
 
         using (new AssertionScope()) {
             result.Should().NotBeNull();
-            result.Error.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(ExceptionRaisingCommand.ExceptionMessage);
+            result.Error.Should().BeOfType<ExceptionDispatchInfo>().Which.SourceException.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(ExceptionRaisingCommand.ExceptionMessage);
         }
 
         cts.Cancel();

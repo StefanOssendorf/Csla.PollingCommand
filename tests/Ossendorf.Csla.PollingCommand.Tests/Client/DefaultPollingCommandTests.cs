@@ -67,7 +67,8 @@ public class DefaultPollingCommandTests {
         var processingResult = FinishedCommand.Fail(correlationId, ExceptionDispatchInfo.Capture(new InvalidOperationException(exceptionMessage)));
         A.CallTo(() => _finishedCommands.TryTake(correlationId, out processingResult)).Returns(true);
 
-        await FluentActions.Awaiting(_systemUnderTest.Execute<EmptyCommand>).Should().ThrowAsync<InvalidOperationException>().WithMessage(exceptionMessage);
+        var error = await FluentActions.Awaiting(_systemUnderTest.Execute<EmptyCommand>).Should().ThrowAsync<DataPortalException>();
+        error.Which.BusinessException.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(exceptionMessage);
     }
 
     public static IEnumerable<Func<(ClaimsPrincipal, string?, bool)>> PrincipalMustBeMaintainedCases() {

@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Csla" />
-    <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" />
-    <PackageReference Include="Csla.Generator.AutoSerialization.CSharp" />
+    <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Csla.Generator.AutoSerialization.CSharp" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>

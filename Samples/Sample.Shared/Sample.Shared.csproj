@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Csla" />
-    <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" />
-    <PackageReference Include="Ossendorf.Csla.DataPortalExtensionGenerator" PrivateAssets="all" ExcludeAssets="runtime" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Csla" />
+        <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" />
+        <PackageReference Include="Ossendorf.Csla.DataPortalExtensionGenerator" PrivateAssets="all" ExcludeAssets="runtime" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Ossendorf.Csla.PollingCommand\Ossendorf.Csla.PollingCommand.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Ossendorf.Csla.PollingCommand\Ossendorf.Csla.PollingCommand.csproj" />
+    </ItemGroup>
 
 </Project>

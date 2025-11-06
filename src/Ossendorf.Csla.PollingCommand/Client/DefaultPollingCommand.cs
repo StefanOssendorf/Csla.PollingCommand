@@ -17,7 +17,6 @@ internal class DefaultPollingCommand : IPollingCommand {
 
     public Task<T> Execute<T>() where T : CommandBase<T> => Execute<T>([]);
     public Task<T> Execute<T>(PollingOptions options) where T : CommandBase<T> => Execute<T>(options, []);
-
     public Task<T> Execute<T>(params object[] executeParameters) where T : CommandBase<T> => Execute<T>(_options.ToPollingOptions(), executeParameters);
     public async Task<T> Execute<T>(PollingOptions options, params object[] executeParameters) where T : CommandBase<T> {
         ArgumentNullException.ThrowIfNull(options);

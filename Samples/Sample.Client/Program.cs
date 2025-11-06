@@ -1,5 +1,4 @@
-﻿using Csla;
-using Csla.Channels.Http;
+﻿using Csla.Channels.Http;
 using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand;
@@ -25,7 +24,7 @@ services.AddHttpClient("", cfg => {
 await using var sp = services.BuildServiceProvider();
 
 await Task.Delay(TimeSpan.FromSeconds(2));
- 
+
 var pollingCommand = sp.GetRequiredService<IPollingCommand>();
 var result = await pollingCommand.Execute<FooCommand>();
 
