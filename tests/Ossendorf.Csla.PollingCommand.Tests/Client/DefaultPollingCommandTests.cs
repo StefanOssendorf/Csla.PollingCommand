@@ -40,7 +40,7 @@ public class DefaultPollingCommandTests {
 
     [Test, DisplayName($"When executing {nameof(CommandReturnsFixedString)} the result should return the command with the constant string as a result.")]
     public async Task Execute_Testcase01() {
-        var capturedParameters = A.Captured<IReadOnlyList<object?>>();
+        var capturedParameters = A.Captured<byte[]>();
         var capturedPrincipal = A.Captured<byte[]>();
         var correlationId = Guid.NewGuid();
 
@@ -60,7 +60,7 @@ public class DefaultPollingCommandTests {
     public async Task Execute_Testcase02() {
         var correlationId = Guid.NewGuid();
 
-        A.CallTo(() => _commandStarter.Start(typeof(EmptyCommand), An<IReadOnlyList<object?>>.Ignored, An<byte[]>.Ignored)).Returns(correlationId);
+        A.CallTo(() => _commandStarter.Start(typeof(EmptyCommand), An<byte[]>.Ignored, An<byte[]>.Ignored)).Returns(correlationId);
         A.CallTo(() => _processingCommands.IsBeingProcessed(correlationId)).ReturnsNextFromSequence(true, false);
 
         const string exceptionMessage = "This is a test exception";
@@ -91,7 +91,7 @@ public class DefaultPollingCommandTests {
 
         _serviceProvider.GetRequiredService<ApplicationContextAccessor>().GetContextManager().SetUser(principal);
 
-        A.CallTo(() => _commandStarter.Start(typeof(EmptyCommand), An<IReadOnlyList<object?>>.Ignored, capturedPrincipal.Ignored)).Returns(correlationId);
+        A.CallTo(() => _commandStarter.Start(typeof(EmptyCommand), An<byte[]>.Ignored, capturedPrincipal.Ignored)).Returns(correlationId);
         A.CallTo(() => _processingCommands.IsBeingProcessed(correlationId)).ReturnsNextFromSequence(true, false);
 
         var commandResult = _serviceProvider.GetRequiredService<ApplicationContext>().CreateInstanceDI<EmptyCommand>();

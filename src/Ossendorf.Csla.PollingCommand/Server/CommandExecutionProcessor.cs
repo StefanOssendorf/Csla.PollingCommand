@@ -33,7 +33,7 @@ internal class CommandExecutionProcessor : ICommandExecutionProcessor {
         try {
             EnsurePrincipalOnScope(scope.ServiceProvider, command);
 
-            var parameters = command.Parameters;
+            var parameters = ((MobileList<object?>)scope.ServiceProvider.GetRequiredService<ISerializationFormatter>().Deserialize(command.SerializedParameters)) ?? [];
 
             var executeCommandMethod = GetGenericMethod(command.Command);
             commandResult = await ((ValueTask<FinishedCommand>)executeCommandMethod.Invoke(this, [scope.ServiceProvider, command.CorrelationId, parameters.ToArray()])!).ConfigureAwait(false);

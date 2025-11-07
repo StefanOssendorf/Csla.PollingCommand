@@ -1,4 +1,6 @@
 ﻿using Csla;
+using Csla.Core;
+using Csla.Serialization;
 using Microsoft.Extensions.Options;
 using Ossendorf.Csla.PollingCommand.Server;
 
@@ -7,11 +9,13 @@ namespace Ossendorf.Csla.PollingCommand.Client;
 internal class DefaultPollingCommand : IPollingCommand {
     private readonly IDataPortal<InitiateCommandExecutionCommand> _initiatePortal;
     private readonly IDataPortal<PollStateOrResultCommand> _pollStateCommand;
+    private readonly ISerializationFormatter _serializationFormatter;
     private readonly DefaultPollingOptions _options;
 
-    public DefaultPollingCommand(IDataPortal<InitiateCommandExecutionCommand> initiatePortal, IDataPortal<PollStateOrResultCommand> pollStateCommand, IOptions<DefaultPollingOptions> options) {
+    public DefaultPollingCommand(IDataPortal<InitiateCommandExecutionCommand> initiatePortal, IDataPortal<PollStateOrResultCommand> pollStateCommand, IOptions<DefaultPollingOptions> options, ISerializationFormatter serializationFormatter) {
         _initiatePortal = initiatePortal;
         _pollStateCommand = pollStateCommand;
+        _serializationFormatter = serializationFormatter;
         _options = options.Value;
     }
 
@@ -22,7 +26,8 @@ internal class DefaultPollingCommand : IPollingCommand {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(executeParameters);
 
-        var correlationId = (await _initiatePortal.InitiateExecution(typeof(T).AssemblyQualifiedName!, [.. executeParameters])).CorrelationId;
+        var serializedParameters = _serializationFormatter.Serialize(new MobileList<object?>(executeParameters));
+        var correlationId = (await _initiatePortal.InitiateExecution(typeof(T).AssemblyQualifiedName!, serializedParameters)).CorrelationId;
 
         do {
             var result = await _pollStateCommand.PollStateOrResult(correlationId);

@@ -41,7 +41,7 @@ public class CommandsTests {
             all.Should().ContainSingle().Which.Should().Satisfy<QueuedCommand>(cmd => {
                 cmd.CorrelationId.Should().Be(correlationId);
                 cmd.Command.Should().Be<EmptyCommand>();
-                cmd.Parameters.Should().BeEmpty();
+                cmd.SerializedParameters.Should().NotBeNull().And.BeEmpty();
                 cmd.Principal.Should().BeEmpty();
             });
         }

@@ -14,8 +14,8 @@ internal class Commands : ICommandStarter, IWaitingCommands, IFinishedCommands, 
         _channel = channel;
     }
 
-    async ValueTask<Guid> ICommandStarter.Start(Type commandType, IReadOnlyList<object?> parameters, byte[] principal) {
-        var item = new QueuedCommand(commandType, parameters, principal);
+    async ValueTask<Guid> ICommandStarter.Start(Type commandType, byte[] serializedParameters, byte[] principal) {
+        var item = new QueuedCommand(commandType, serializedParameters, principal);
 
         _beingProcessed.TryAdd(item.CorrelationId, null);
         await _channel.Writer.WriteAsync(item);

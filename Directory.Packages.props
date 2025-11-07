@@ -18,7 +18,7 @@
     <PackageVersion Include="Ossendorf.Csla.DataPortalExtensionGenerator" Version="1.0.1" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="TUnit" Version="0.90.45" />
+    <PackageVersion Include="TUnit" Version="1.0.0" />
     <PackageVersion Include="Xunit.OpenCategories.V3" Version="2.3.0.12" />
     <PackageVersion Include="xunit.v3" Version="2.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />

@@ -1,4 +1,5 @@
-﻿using Csla.Channels.Http;
+﻿using Csla;
+using Csla.Channels.Http;
 using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand;
@@ -32,11 +33,20 @@ Console.WriteLine("Returned from server...");
 Console.WriteLine(result.NewId.ToString() ?? "<null>");
 Console.WriteLine($"Username: {result.UserName}");
 
-Console.ReadKey();
+await Task.Delay(TimeSpan.FromSeconds(2));
+
+Console.WriteLine(new string('-', 15));
 
 try {
-    var result2 = await pollingCommand.Execute<ErroringCommand>();
+    _ = await pollingCommand.Execute<ErroringCommand>();
 } catch (Exception e) {
-    Console.WriteLine(e);
     Console.WriteLine(e.Message);
 }
+
+Console.WriteLine(new string('-', 15));
+
+var foo = await sp.GetRequiredService<IDataPortal<Foo>>().CreateAsync();
+
+var result2 = await pollingCommand.Execute<CommandWithParameter>(foo);
+
+Console.WriteLine(result2.Result);

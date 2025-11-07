@@ -1,5 +1,4 @@
 ﻿using Csla;
-using Csla.Core;
 using Csla.Serialization;
 
 namespace Ossendorf.Csla.PollingCommand.Server;
@@ -12,10 +11,10 @@ internal partial class InitiateCommandExecutionCommand : CommandBase<InitiateCom
     }
 
     [Execute]
-    private async Task InitiateExecution(string fullTypeName, MobileList<object?> parameters, [Inject] ICommandStarter commandStarter) {
+    private async Task InitiateExecution(string fullTypeName, byte[] serializedParameters, [Inject] ICommandStarter commandStarter) {
         var type = Type.GetType(fullTypeName) ?? throw new InvalidOperationException($"Type '{fullTypeName}' could not be loaded. Please make sure the assembly is referenced and available.");
 
         var serializer = ApplicationContext.GetRequiredService<ISerializationFormatter>();
-        CorrelationId = await commandStarter.Start(type, parameters, serializer.Serialize(ApplicationContext.User)).ConfigureAwait(false);
+        CorrelationId = await commandStarter.Start(type, serializedParameters, serializer.Serialize(ApplicationContext.User)).ConfigureAwait(false);
     }
 }
