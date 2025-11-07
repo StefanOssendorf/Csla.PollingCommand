@@ -8,12 +8,12 @@ namespace Ossendorf.Csla.PollingCommand.Server;
 internal partial class FinishedCommand {
 
     public static FinishedCommand Fail(Guid correlationId, ExceptionDispatchInfo exception) => new() { CorrelationId = correlationId, Error = exception };
-    public static FinishedCommand Success(Guid correlationId, object result) => new() { CorrelationId = correlationId, Result = result };
+    public static FinishedCommand Success(Guid correlationId, object result, ISerializationFormatter formatter) => new() { CorrelationId = correlationId, Result = formatter.Serialize(result) };
 
     public FinishedCommand() { }
 
     public Guid CorrelationId { get; private set; }
-    public object? Result { get; private set; }
+    public byte[]? Result { get; private set; }
     public ExceptionDispatchInfo? Error { get; private set; }
 
     [MemberNotNullWhen(true, nameof(Result))]

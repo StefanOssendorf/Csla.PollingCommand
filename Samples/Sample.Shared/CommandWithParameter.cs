@@ -7,8 +7,11 @@ public partial class CommandWithParameter : CommandBase<CommandWithParameter> {
 
     public partial string Result { get; private set; }
 
+    public partial Foo FooResult { get; private set; }
+
     [Execute]
     private void Execute(Foo foo) {
         Result = foo.Random;
+        FooResult = foo;
     }
 }

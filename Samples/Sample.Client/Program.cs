@@ -45,7 +45,7 @@ try {
 
 Console.WriteLine(new string('-', 15));
 
-var foo = await sp.GetRequiredService<IDataPortal<Foo>>().CreateAsync();
+var foo = await sp.GetRequiredService<IDataPortal<Foo>>().CreateAsync(4);
 
 var result2 = await pollingCommand.Execute<CommandWithParameter>(foo);
 
