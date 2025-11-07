@@ -11,9 +11,9 @@
     <PackageVersion Include="Csla.Generator.AutoImplementProperties.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Csla.Generator.AutoSerialization.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="FakeItEasy" Version="8.3.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
     <PackageVersion Include="Ossendorf.Csla.DataPortalExtensionGenerator" Version="1.0.1" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
