@@ -17,13 +17,14 @@
         </PackageReference>
         <PackageReference Include="Csla.Generator.AutoImplementProperties.CSharp" />
         <PackageReference Include="FakeItEasy" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Csla" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
         <PackageReference Include="TUnit" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Ossendorf.Csla.PollingCommand\Ossendorf.Csla.PollingCommand.csproj" />
+      <ProjectReference Include="..\Ossendorf.Csla.PollingCommand.TestWebServer\Ossendorf.Csla.PollingCommand.TestWebServer.csproj" />
     </ItemGroup>
 
 </Project>
