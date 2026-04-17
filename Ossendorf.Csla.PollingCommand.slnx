@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="src\Ossendorf.Csla.PollingCommand\Ossendorf.Csla.PollingCommand.csproj" />
+  <Project Path="tests\Ossendorf.Csla.PollingCommand.Tests\Ossendorf.Csla.PollingCommand.Tests.csproj" />
+  <Folder Name="/Samples/">
+    <Project Path="Samples\Sample.Client\Sample.Client.csproj" />
+    <Project Path="Samples\Sample.Server\Sample.Server.csproj" />
+    <Project Path="Samples\Sample.Shared\Sample.Shared.csproj" />
+  </Folder>
+  <Project Path="tests\Ossendorf.Csla.PollingCommand.TestWebServer\Ossendorf.Csla.PollingCommand.TestWebServer.csproj" />
+</Solution>
