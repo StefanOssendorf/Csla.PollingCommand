@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.35821.62
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11201.2 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Server", "Samples\Sample.Server\Sample.Server.csproj", "{83E42224-29DE-44B5-A3D1-5AE915D2FF7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Shared", "Samples\Sample.Shared\Sample.Shared.csproj", "{3DC59D36-8EBE-4267-AFC3-B003ADC43841}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ossendorf.Csla.PollingCommand.TestWebServer", "tests\Ossendorf.Csla.PollingCommand.TestWebServer\Ossendorf.Csla.PollingCommand.TestWebServer.csproj", "{861E99D4-9338-4706-A596-4783564AC600}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{3DC59D36-8EBE-4267-AFC3-B003ADC43841}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC59D36-8EBE-4267-AFC3-B003ADC43841}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC59D36-8EBE-4267-AFC3-B003ADC43841}.Release|Any CPU.Build.0 = Release|Any CPU
+		{861E99D4-9338-4706-A596-4783564AC600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{861E99D4-9338-4706-A596-4783564AC600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{861E99D4-9338-4706-A596-4783564AC600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{861E99D4-9338-4706-A596-4783564AC600}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

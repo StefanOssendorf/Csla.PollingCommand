@@ -15,6 +15,7 @@ namespace Ossendorf.Csla.PollingCommand.Tests.Client;
 public class DefaultPollingCommandTests {
     private readonly ServiceProvider _serviceProvider;
     private readonly IPollingCommand _systemUnderTest;
+    private readonly ISerializationFormatter _serializationFormatter;
     private readonly ICommandStarter _commandStarter;
     private readonly IProcessingCommands _processingCommands;
     private readonly IFinishedCommands _finishedCommands;
@@ -33,6 +34,7 @@ public class DefaultPollingCommandTests {
             .BuildServiceProvider();
 
         _systemUnderTest = _serviceProvider.GetRequiredService<IPollingCommand>();
+        _serializationFormatter = _serviceProvider.GetRequiredService<ISerializationFormatter>();
     }
 
     [After(Test)]
@@ -49,7 +51,7 @@ public class DefaultPollingCommandTests {
 
         var commandResult = _serviceProvider.GetRequiredService<ApplicationContext>().CreateInstanceDI<CommandReturnsFixedString>();
         commandResult.FixedString = CommandReturnsFixedString.ReturnConstant;
-        var processingResult = FinishedCommand.Success(correlationId, commandResult);
+        var processingResult = FinishedCommand.Success(correlationId, commandResult, _serializationFormatter);
         A.CallTo(() => _finishedCommands.TryTake(correlationId, out processingResult)).Returns(true);
 
         var result = (await _systemUnderTest.Execute<CommandReturnsFixedString>()).FixedString;
@@ -95,7 +97,7 @@ public class DefaultPollingCommandTests {
         A.CallTo(() => _processingCommands.IsBeingProcessed(correlationId)).ReturnsNextFromSequence(true, false);
 
         var commandResult = _serviceProvider.GetRequiredService<ApplicationContext>().CreateInstanceDI<EmptyCommand>();
-        var processingResult = FinishedCommand.Success(correlationId, commandResult);
+        var processingResult = FinishedCommand.Success(correlationId, commandResult, _serializationFormatter);
         A.CallTo(() => _finishedCommands.TryTake(correlationId, out processingResult)).Returns(true);
 
         _ = await _systemUnderTest.Execute<EmptyCommand>();

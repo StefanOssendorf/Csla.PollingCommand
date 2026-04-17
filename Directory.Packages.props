@@ -11,6 +11,7 @@
     <PackageVersion Include="Csla.Generator.AutoImplementProperties.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Csla.Generator.AutoSerialization.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="FakeItEasy" Version="8.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />

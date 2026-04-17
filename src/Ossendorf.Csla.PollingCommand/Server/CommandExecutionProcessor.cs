@@ -57,7 +57,7 @@ internal class CommandExecutionProcessor : ICommandExecutionProcessor {
         var dp = serviceProvider.GetRequiredService<IDataPortal<T>>();
 
         try {
-            return FinishedCommand.Success(correlationId, await dp.ExecuteAsync(parameters));
+            return FinishedCommand.Success(correlationId, await dp.ExecuteAsync(parameters), serviceProvider.GetRequiredService<ISerializationFormatter>());
         } catch (DataPortalException exc) when (exc.InnerException is not null) {
             return CreateFailed(correlationId, exc.InnerException.InnerException ?? exc.InnerException);
         } catch (Exception exc) {

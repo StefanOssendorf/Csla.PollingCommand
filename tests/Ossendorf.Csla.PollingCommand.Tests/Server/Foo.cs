@@ -1,6 +1,6 @@
 using Csla;
 
-namespace Ossendorf.Csla.PollingCommand.Tests;
+namespace Ossendorf.Csla.PollingCommand.Tests.Server;
 
 [CslaImplementProperties]
 public partial class Foo : BusinessBase<Foo> {

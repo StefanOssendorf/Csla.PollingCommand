@@ -34,7 +34,7 @@ internal class DefaultPollingCommand : IPollingCommand {
             if (result.IsFinished) {
                 var commandResult = result.Result;
                 if (commandResult.HasResult) {
-                    return (T)commandResult.Result;
+                    return (T)_serializationFormatter.Deserialize(commandResult.Result);
                 }
             } else if (!result.IsRunning) {
                 throw new InvalidOperationException($"Should never happen!");
