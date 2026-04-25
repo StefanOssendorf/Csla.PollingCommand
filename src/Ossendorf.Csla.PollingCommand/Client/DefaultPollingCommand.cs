@@ -11,17 +11,19 @@ internal class DefaultPollingCommand : IPollingCommand {
     private readonly IDataPortal<PollStateOrResultCommand> _pollStateCommand;
     private readonly ISerializationFormatter _serializationFormatter;
     private readonly DefaultPollingOptions _options;
+    private readonly PollingOptions _defaultPollingOptions;
 
     public DefaultPollingCommand(IDataPortal<InitiateCommandExecutionCommand> initiatePortal, IDataPortal<PollStateOrResultCommand> pollStateCommand, IOptions<DefaultPollingOptions> options, ISerializationFormatter serializationFormatter) {
         _initiatePortal = initiatePortal;
         _pollStateCommand = pollStateCommand;
         _serializationFormatter = serializationFormatter;
         _options = options.Value;
+        _defaultPollingOptions = _options.ToPollingOptions();
     }
 
     public Task<T> Execute<T>() where T : CommandBase<T> => Execute<T>([]);
     public Task<T> Execute<T>(PollingOptions options) where T : CommandBase<T> => Execute<T>(options, []);
-    public Task<T> Execute<T>(params object[] executeParameters) where T : CommandBase<T> => Execute<T>(_options.ToPollingOptions(), executeParameters);
+    public Task<T> Execute<T>(params object[] executeParameters) where T : CommandBase<T> => Execute<T>(_defaultPollingOptions, executeParameters);
     public async Task<T> Execute<T>(PollingOptions options, params object[] executeParameters) where T : CommandBase<T> {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(executeParameters);

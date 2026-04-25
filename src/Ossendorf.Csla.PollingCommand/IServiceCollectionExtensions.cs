@@ -30,7 +30,7 @@ public static class IServiceCollectionExtensions {
             .AddSingleton<IProcessingCommands>(sp => sp.GetRequiredService<Commands>())
             .AddSingleton(Channel.CreateUnbounded<QueuedCommand>(new UnboundedChannelOptions {
                 SingleReader = true,
-                SingleWriter = true
+                SingleWriter = false
             }));
     }
 }

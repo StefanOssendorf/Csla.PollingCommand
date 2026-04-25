@@ -39,11 +39,11 @@ public class CommandExecutionProcessorTests {
 
         var processorTask = _systemUnderTest.Process(cts.Token);
 
-        using var cts2 = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+        using var cts2 = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
         FinishedCommand? result = null;
         while (!SutFinishedCommands.TryTake(correlationId, out result)) {
-            await Task.Delay(TimeSpan.FromMilliseconds(5), cts.Token);
+            await Task.Delay(TimeSpan.FromMilliseconds(5), cts2.Token);
         }
 
         using (new AssertionScope()) {

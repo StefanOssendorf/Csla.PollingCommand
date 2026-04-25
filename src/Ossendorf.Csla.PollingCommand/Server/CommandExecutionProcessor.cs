@@ -1,14 +1,16 @@
-﻿using Csla;
+using Csla;
 using Csla.Core;
 using Csla.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Security.Principal;
 
 namespace Ossendorf.Csla.PollingCommand.Server;
 
 internal class CommandExecutionProcessor : ICommandExecutionProcessor {
-    private readonly Lazy<System.Reflection.MethodInfo> _executeCommandMethodInfo = new(static () => typeof(CommandExecutionProcessor).GetMethod(nameof(ExecuteCommand), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!, LazyThreadSafetyMode.PublicationOnly);
+    private static readonly ConcurrentDictionary<Type, Func<IServiceProvider, Guid, object[], ValueTask<FinishedCommand>>> _executors = new();
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IFinishCommands _finishCommands;
     private readonly IWaitingCommands _waitingCommands;
@@ -29,14 +31,13 @@ internal class CommandExecutionProcessor : ICommandExecutionProcessor {
         await Task.CompletedTask.ConfigureAwait(ConfigureAwaitOptions.ForceYielding);
 
         FinishedCommand commandResult;
-        await using var scope = _scopeFactory.CreateAsyncScope();
         try {
+            await using var scope = _scopeFactory.CreateAsyncScope();
             EnsurePrincipalOnScope(scope.ServiceProvider, command);
 
             var parameters = ((MobileList<object?>)scope.ServiceProvider.GetRequiredService<ISerializationFormatter>().Deserialize(command.SerializedParameters)) ?? [];
 
-            var executeCommandMethod = GetGenericMethod(command.Command);
-            commandResult = await ((ValueTask<FinishedCommand>)executeCommandMethod.Invoke(this, [scope.ServiceProvider, command.CorrelationId, parameters.ToArray()])!).ConfigureAwait(false);
+            commandResult = await GetExecutor(command.Command)(scope.ServiceProvider, command.CorrelationId, parameters.ToArray()).ConfigureAwait(false);
         } catch (Exception e) {
             commandResult = FinishedCommand.Fail(command.CorrelationId, ExceptionDispatchInfo.Capture(e));
         }
@@ -51,7 +52,12 @@ internal class CommandExecutionProcessor : ICommandExecutionProcessor {
         contextManager.SetUser((IPrincipal)deserializer.Deserialize(command.Principal));
     }
 
-    private System.Reflection.MethodInfo GetGenericMethod(Type type) => _executeCommandMethodInfo.Value.MakeGenericMethod(type);
+    private static Func<IServiceProvider, Guid, object[], ValueTask<FinishedCommand>> GetExecutor(Type commandType)
+        => _executors.GetOrAdd(commandType, static t =>
+            typeof(CommandExecutionProcessor)
+                .GetMethod(nameof(ExecuteCommand), BindingFlags.NonPublic | BindingFlags.Static)!
+                .MakeGenericMethod(t)
+                .CreateDelegate<Func<IServiceProvider, Guid, object[], ValueTask<FinishedCommand>>>());
 
     private static async ValueTask<FinishedCommand> ExecuteCommand<T>(IServiceProvider serviceProvider, Guid correlationId, object[] parameters) where T : CommandBase<T> {
         var dp = serviceProvider.GetRequiredService<IDataPortal<T>>();
