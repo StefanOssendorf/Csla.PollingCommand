@@ -4,22 +4,22 @@
     <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AwesomeAssertions" Version="9.3.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
     <PackageVersion Include="AwesomeAssertions.Analyzers" Version="9.0.8" />
-    <PackageVersion Include="Csla" Version="9.1.0" />
-    <PackageVersion Include="Csla.AspNetCore" Version="9.1.0" />
-    <PackageVersion Include="Csla.Generator.AutoImplementProperties.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageVersion Include="Csla.Generator.AutoSerialization.CSharp" Version="9.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageVersion Include="FakeItEasy" Version="8.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
-    <PackageVersion Include="MinVer" Version="6.0.0" />
+    <PackageVersion Include="Csla" Version="10.1.0" />
+    <PackageVersion Include="Csla.AspNetCore" Version="10.1.0" />
+    <PackageVersion Include="Csla.Generator.AutoImplementProperties.CSharp" Version="10.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageVersion Include="Csla.Generator.AutoSerialization.CSharp" Version="10.1.0" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageVersion Include="FakeItEasy" Version="9.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.7" />
+    <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="Ossendorf.Csla.DataPortalExtensionGenerator" Version="1.0.1" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="TUnit" Version="1.0.0" />
+    <PackageVersion Include="TUnit" Version="1.39.0" />
     <PackageVersion Include="Xunit.OpenCategories.V3" Version="2.3.0.12" />
     <PackageVersion Include="xunit.v3" Version="2.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />

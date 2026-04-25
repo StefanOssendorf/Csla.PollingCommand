@@ -1,6 +1,8 @@
 ﻿using AwesomeAssertions;
 using AwesomeAssertions.Execution;
+using Csla;
 using Csla.Configuration;
+using Csla.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Server;
 using System.Runtime.ExceptionServices;
@@ -31,7 +33,9 @@ public class CommandExecutionProcessorTests {
     [Test, DisplayName("When an executing command throws an exception the thrown exception must be returned to the client.")]
     public async Task Execute_Testcase01() {
         using var cts = new CancellationTokenSource();
-        var correlationId = await SutCommandStarter.Start(typeof(ExceptionRaisingCommand), [], []);
+        var serializer = _serviceProvider.GetRequiredService<ISerializationFormatter>();
+        var applicationContext = _serviceProvider.GetRequiredService<ApplicationContext>();
+        var correlationId = await SutCommandStarter.Start(typeof(ExceptionRaisingCommand), [], serializer.Serialize(applicationContext.User));
 
         var processorTask = _systemUnderTest.Process(cts.Token);
 

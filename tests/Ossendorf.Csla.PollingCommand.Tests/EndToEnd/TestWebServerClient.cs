@@ -26,7 +26,7 @@ public class TestWebServerClient : IAsyncInitializer, IAsyncDisposable {
 
     public IPollingCommand PollingCommand() => _clientServiceProvider.GetRequiredService<IPollingCommand>();
 
-    public IDataPortal<T> GetPortal<T>() => _clientServiceProvider.GetRequiredService<IDataPortal<T>>();
+    public IDataPortal<T> GetPortal<T>() where T : global::Csla.Core.ICslaObject => _clientServiceProvider.GetRequiredService<IDataPortal<T>>();
 
     public async ValueTask DisposeAsync() {
         await _clientServiceProvider.DisposeAsync();
