@@ -15,8 +15,10 @@ public static class IServiceCollectionExtensions {
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
     /// <param name="pollingInterval">The interval between polling attempts. Must not be <see cref="Timeout.InfiniteTimeSpan"/>.</param>
     /// <returns>The <paramref name="services"/> so that additional calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="services"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="pollingInterval"/> is <see cref="Timeout.InfiniteTimeSpan"/>.</exception>
     public static IServiceCollection AddPollingCommandClient(this IServiceCollection services, TimeSpan pollingInterval) {
+        ArgumentNullException.ThrowIfNull(services);
         if (pollingInterval == Timeout.InfiniteTimeSpan) {
             throw new ArgumentOutOfRangeException(nameof(pollingInterval), $"The polling interval must not be {nameof(Timeout)}.{nameof(Timeout.InfiniteTimeSpan)}");
         }
@@ -32,7 +34,9 @@ public static class IServiceCollectionExtensions {
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
     /// <param name="configure">An optional delegate to configure <see cref="PollingCommandServerOptions"/>.</param>
     /// <returns>The <paramref name="services"/> so that additional calls can be chained.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="services"/> is <see langword="null"/>.</exception>
     public static IServiceCollection AddPollingCommandServer(this IServiceCollection services, Action<PollingCommandServerOptions>? configure = null) {
+        ArgumentNullException.ThrowIfNull(services);
         var optBuilder = services.AddOptions<PollingCommandServerOptions>();
         if (configure is not null) {
             optBuilder.Configure(configure);
