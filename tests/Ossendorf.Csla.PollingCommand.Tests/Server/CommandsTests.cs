@@ -3,6 +3,7 @@ using AwesomeAssertions.Execution;
 using Csla.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ossendorf.Csla.PollingCommand.Server;
+using System.Runtime.ExceptionServices;
 using System.Threading.Channels;
 
 namespace Ossendorf.Csla.PollingCommand.Tests.Server;
@@ -67,5 +68,24 @@ public class CommandsTests {
         var correcltionId = await SutCommandStarter.Start(typeof(EmptyCommand), [], []);
 
         SutProcessingCommands.IsBeingProcessed(correcltionId).Should().BeTrue();
+    }
+
+    [Test, DisplayName("A finished command that is not polled within the TTL must be automatically evicted.")]
+    public async Task TryTake_EvictsExpiredEntry() {
+        await using var sp = new ServiceCollection()
+            .AddCsla(o => o.AddConsoleApp())
+            .AddPollingCommandServer(o => o.FinishedCommandTtl = TimeSpan.FromMilliseconds(50))
+            .BuildServiceProvider();
+
+        var commands = sp.GetRequiredService<Commands>();
+        var finishCommands = (IFinishCommands)commands;
+        var finishedCommands = (IFinishedCommands)commands;
+
+        var finished = FinishedCommand.Fail(Guid.NewGuid(), ExceptionDispatchInfo.Capture(new Exception("eviction test")));
+        finishCommands.Finish(finished);
+
+        await Task.Delay(200);
+
+        finishedCommands.TryTake(finished.CorrelationId, out _).Should().BeFalse();
     }
 }

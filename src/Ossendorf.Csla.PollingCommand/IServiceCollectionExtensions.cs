@@ -30,8 +30,14 @@ public static class IServiceCollectionExtensions {
     /// Registers the server-side command execution infrastructure into the <paramref name="services"/> container.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
+    /// <param name="configure">An optional delegate to configure <see cref="PollingCommandServerOptions"/>.</param>
     /// <returns>The <paramref name="services"/> so that additional calls can be chained.</returns>
-    public static IServiceCollection AddPollingCommandServer(this IServiceCollection services) {
+    public static IServiceCollection AddPollingCommandServer(this IServiceCollection services, Action<PollingCommandServerOptions>? configure = null) {
+        var optBuilder = services.AddOptions<PollingCommandServerOptions>();
+        if (configure is not null) {
+            optBuilder.Configure(configure);
+        }
+
         return services.AddHostedService<CommandExecutionHostedService>()
             .AddSingleton<ICommandExecutionProcessor, CommandExecutionProcessor>()
             .AddSingleton<Commands>()
