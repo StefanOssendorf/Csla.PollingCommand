@@ -9,6 +9,13 @@ namespace Ossendorf.Csla.PollingCommand;
 /// Provides extension methods for <see cref="IServiceCollection"/>
 /// </summary>
 public static class IServiceCollectionExtensions {
+    /// <summary>
+    /// Registers the client-side polling command infrastructure into the <paramref name="services"/> container.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
+    /// <param name="pollingInterval">The interval between polling attempts. Must not be <see cref="Timeout.InfiniteTimeSpan"/>.</param>
+    /// <returns>The <paramref name="services"/> so that additional calls can be chained.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="pollingInterval"/> is <see cref="Timeout.InfiniteTimeSpan"/>.</exception>
     public static IServiceCollection AddPollingCommandClient(this IServiceCollection services, TimeSpan pollingInterval) {
         if (pollingInterval == Timeout.InfiniteTimeSpan) {
             throw new ArgumentOutOfRangeException(nameof(pollingInterval), $"The polling interval must not be {nameof(Timeout)}.{nameof(Timeout.InfiniteTimeSpan)}");
@@ -19,6 +26,11 @@ public static class IServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Registers the server-side command execution infrastructure into the <paramref name="services"/> container.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
+    /// <returns>The <paramref name="services"/> so that additional calls can be chained.</returns>
     public static IServiceCollection AddPollingCommandServer(this IServiceCollection services) {
         return services.AddHostedService<CommandExecutionHostedService>()
             .AddSingleton<ICommandExecutionProcessor, CommandExecutionProcessor>()
