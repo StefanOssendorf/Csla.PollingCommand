@@ -20,6 +20,7 @@ public interface IPollingCommand {
     /// <typeparam name="T">Command to execute.</typeparam>
     /// <param name="options">The options to configure per execution options.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is <see langword="null"/>.</exception>
     Task<T> Execute<T>(PollingOptions options) where T : CommandBase<T>;
 
     /// <summary>
@@ -28,6 +29,7 @@ public interface IPollingCommand {
     /// <typeparam name="T">Command to execute.</typeparam>
     /// <param name="executeParameters">The parameters for the execute method. Remark: Make sure only to pass objects which are serializable by csla.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="executeParameters"/> is <see langword="null"/>.</exception>
     Task<T> Execute<T>(params object[] executeParameters) where T : CommandBase<T>;
 
     /// <summary>
@@ -37,5 +39,6 @@ public interface IPollingCommand {
     /// <param name="options">The options to configure per execution options.</param>
     /// <param name="executeParameters">The parameters for the execute method. Remark: Make sure only to pass objects which are serializable by csla.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> or <paramref name="executeParameters"/> is <see langword="null"/>.</exception>
     Task<T> Execute<T>(PollingOptions options, params object[] executeParameters) where T : CommandBase<T>;
 }
