@@ -1,0 +1,31 @@
+digraph PollingCommandFlow {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontname="Arial"];
+  edge [fontname="Arial"];
+
+  Client [label="Client App", fillcolor="#E8F4F8", style="rounded,filled"];
+  InitCall [label="1. InitiateCommandExecution\n(serialize parameters)", fillcolor="#FFF4E6", style="rounded,filled"];
+  ServerQueue [label="Server Command Queue", fillcolor="#F0E8F8", style="rounded,filled"];
+  BackgroundSvc [label="CommandExecutionHostedService\n(background)", fillcolor="#F0E8F8", style="rounded,filled"];
+  ExecuteCmd [label="Execute command\n(via DataPortal)", fillcolor="#E8F8E8", style="rounded,filled"];
+  FinishedCache [label="FinishedCommands\n(in-memory cache,\nTTL configurable)", fillcolor="#FFF8E8", style="rounded,filled"];
+  PollCall [label="2. PollStateOrResult\n(correlation ID)", fillcolor="#FFF4E6", style="rounded,filled"];
+  CheckState [label="Check command state\n(queued/running/finished)", fillcolor="#F0E8F8", style="rounded,filled"];
+  ReturnResult [label="Return serialized result\nor error", fillcolor="#E8F8E8", style="rounded,filled"];
+  ClientDeserialize [label="Deserialize result\nto T", fillcolor="#E8F4F8", style="rounded,filled"];
+
+  Client -> InitCall [label="Call"];
+  InitCall -> ServerQueue [label="HTTP POST"];
+  ServerQueue -> BackgroundSvc [label="Dequeue"];
+  BackgroundSvc -> ExecuteCmd [label="Process"];
+  ExecuteCmd -> FinishedCache [label="Store result"];
+  Client -> PollCall [label="Poll loop\n(every N ms)"];
+  PollCall -> CheckState [label="HTTP GET"];
+  CheckState -> FinishedCache [label="Lookup"];
+  FinishedCache -> ReturnResult [label=""];
+  ReturnResult -> ClientDeserialize [label="Receive"];
+  ClientDeserialize -> Client [label="Task completes"];
+
+  {rank=same; ServerQueue; BackgroundSvc; ExecuteCmd; FinishedCache}
+  {rank=same; CheckState; ReturnResult}
+}
