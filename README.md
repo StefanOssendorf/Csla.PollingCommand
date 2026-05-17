@@ -86,7 +86,7 @@ The server automatically sets up:
 var services = new ServiceCollection();
 
 // Configure CSLA with a client-side DataPortal
-// (transport depends on your server setup — HTTP, gRPC, named pipes, etc.)
+// (transport depends on your server setup — HTTP, gRPC, etc.)
 services.AddCsla(options =>
     options
         .AddConsoleApp()  // or .AddAspNetCore(), etc.
@@ -210,11 +210,6 @@ await pollingCommand.Execute<MyCommand>(
 
 > [!WARNING]
 > **Currently executing commands are lost on server restart.** All command state is held in memory only. If the server crashes or restarts, any in-flight commands (queued or executing) will be abandoned. Clients will timeout waiting for results that will never arrive. This library is not suitable for scenarios requiring guaranteed execution durability.
-
-### Other Limitations
-
-- Memory usage grows with the number of finished commands until TTL expiry
-- Polling adds latency compared to direct synchronous execution (milliseconds per round trip)
 
 ## Requirements
 
