@@ -27,6 +27,7 @@ public class DefaultPollingCommandTests {
 
         _serviceProvider = new ServiceCollection()
             .AddCsla(o => o.AddConsoleApp())
+            .AddLogging()
             .AddPollingCommandClient(TimeSpan.FromMilliseconds(5))
             .AddScoped(_ => _commandStarter)
             .AddScoped(_ => _processingCommands)

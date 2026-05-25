@@ -1,5 +1,7 @@
 ﻿using Csla;
 using Csla.Serialization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Ossendorf.Csla.PollingCommand.Server;
 
@@ -11,7 +13,12 @@ internal partial class InitiateCommandExecutionCommand : CommandBase<InitiateCom
     }
 
     [Execute]
-    private async Task InitiateExecution(string fullTypeName, byte[] serializedParameters, [Inject] ICommandStarter commandStarter) {
+    private async Task InitiateExecution(string fullTypeName, byte[] serializedParameters, TimeSpan pollingInterval, [Inject] ICommandStarter commandStarter, [Inject] IOptions<PollingCommandServerOptions> serverOptions, [Inject] ILogger<InitiateCommandExecutionCommand> logger) {
+        var options = serverOptions.Value;
+        if (!options.SuppressPollingIntervalTtlWarning && pollingInterval >= options.FinishedCommandTtl) {
+            logger.PollingIntervalExceedsTtl(pollingInterval, options.FinishedCommandTtl, fullTypeName);
+        }
+
         var type = Type.GetType(fullTypeName) ?? throw new InvalidOperationException($"Type '{fullTypeName}' could not be loaded. Please make sure the assembly is referenced and available.");
 
         var serializer = ApplicationContext.GetRequiredService<ISerializationFormatter>();

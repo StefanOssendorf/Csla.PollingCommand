@@ -9,4 +9,11 @@ public class PollingCommandServerOptions {
     /// Default: 5 minutes.
     /// </summary>
     public TimeSpan FinishedCommandTtl { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// When <see langword="true"/>, suppresses the warning logged when the client polling interval
+    /// is greater than or equal to <see cref="FinishedCommandTtl"/>.
+    /// Default: <see langword="false"/>.
+    /// </summary>
+    public bool SuppressPollingIntervalTtlWarning { get; set; }
 }
