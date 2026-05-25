@@ -30,7 +30,7 @@ public class InitiateCommandExecutionCommandTests {
 
             var serializedParameter = scope.ServiceProvider.GetRequiredService<ISerializationFormatter>().Serialize(new MobileList<object?> { foo });
 
-            var result = await scope.ServiceProvider.GetRequiredService<IDataPortal<InitiateCommandExecutionCommand>>().InitiateExecution(typeof(CommandWithBusinessObjectParameters).AssemblyQualifiedName!, serializedParameter);
+            var result = await scope.ServiceProvider.GetRequiredService<IDataPortal<InitiateCommandExecutionCommand>>().InitiateExecution(typeof(CommandWithBusinessObjectParameters).AssemblyQualifiedName!, serializedParameter, TimeSpan.FromSeconds(1));
 
             correlationId = result.CorrelationId;
         }

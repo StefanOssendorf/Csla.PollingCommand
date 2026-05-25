@@ -29,7 +29,8 @@ internal class DefaultPollingCommand : IPollingCommand {
         ArgumentNullException.ThrowIfNull(executeParameters);
 
         var serializedParameters = _serializationFormatter.Serialize(new MobileList<object?>(executeParameters));
-        var correlationId = (await _initiatePortal.InitiateExecution(typeof(T).AssemblyQualifiedName!, serializedParameters)).CorrelationId;
+        var pollingInterval = options.Interval ?? _options.Interval;
+        var correlationId = (await _initiatePortal.InitiateExecution(typeof(T).AssemblyQualifiedName!, serializedParameters, pollingInterval)).CorrelationId;
 
         do {
             var result = await _pollStateCommand.PollStateOrResult(correlationId);
