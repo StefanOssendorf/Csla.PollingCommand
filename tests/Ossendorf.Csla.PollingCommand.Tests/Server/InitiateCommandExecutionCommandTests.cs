@@ -4,6 +4,7 @@ using Csla.Configuration;
 using Csla.Core;
 using Csla.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Ossendorf.Csla.PollingCommand.Server;
 using System.Threading.Channels;
 
@@ -16,6 +17,7 @@ public class InitiateCommandExecutionCommandTests {
     public InitiateCommandExecutionCommandTests() {
         _serviceProvider = new ServiceCollection()
             .AddCsla(o => o.AddConsoleApp())
+            .AddLogging()
             .AddPollingCommandServer()
             .BuildServiceProvider();
 
@@ -41,5 +43,50 @@ public class InitiateCommandExecutionCommandTests {
 
         var queuedItem = queuedItems[0];
         queuedItem.SerializedParameters.Should().NotBeNull();
+    }
+
+    [Test, DisplayName("When polling interval is greater than or equal to server TTL a warning is logged.")]
+    public async Task Start_WhenPollingIntervalExceedsTtl_WarningIsLogged() {
+        var capturingLogger = new CapturingLogger();
+        var sp = new ServiceCollection()
+            .AddCsla(o => o.AddConsoleApp())
+            .AddPollingCommandServer(o => o.FinishedCommandTtl = TimeSpan.FromSeconds(5))
+            .AddSingleton<ILogger<InitiateCommandExecutionCommand>>(capturingLogger)
+            .BuildServiceProvider();
+
+        await using var scope = sp.CreateAsyncScope();
+        var serializedParameter = scope.ServiceProvider.GetRequiredService<ISerializationFormatter>().Serialize(new MobileList<object?>());
+        await scope.ServiceProvider.GetRequiredService<IDataPortal<InitiateCommandExecutionCommand>>().InitiateExecution(typeof(CommandWithBusinessObjectParameters).AssemblyQualifiedName!, serializedParameter, TimeSpan.FromSeconds(10));
+
+        capturingLogger.Entries.Should().ContainSingle(e => e.Level == LogLevel.Warning);
+    }
+
+    [Test, DisplayName("When SuppressPollingIntervalTtlWarning is true no warning is logged even when polling interval exceeds TTL.")]
+    public async Task Start_WhenWarningIsSuppressed_NoWarningIsLogged() {
+        var capturingLogger = new CapturingLogger();
+        var sp = new ServiceCollection()
+            .AddCsla(o => o.AddConsoleApp())
+            .AddPollingCommandServer(o => {
+                o.FinishedCommandTtl = TimeSpan.FromSeconds(5);
+                o.SuppressPollingIntervalTtlWarning = true;
+            })
+            .AddSingleton<ILogger<InitiateCommandExecutionCommand>>(capturingLogger)
+            .BuildServiceProvider();
+
+        await using var scope = sp.CreateAsyncScope();
+        var serializedParameter = scope.ServiceProvider.GetRequiredService<ISerializationFormatter>().Serialize(new MobileList<object?>());
+        await scope.ServiceProvider.GetRequiredService<IDataPortal<InitiateCommandExecutionCommand>>().InitiateExecution(typeof(CommandWithBusinessObjectParameters).AssemblyQualifiedName!, serializedParameter, TimeSpan.FromSeconds(10));
+
+        capturingLogger.Entries.Should().BeEmpty();
+    }
+
+    private sealed class CapturingLogger : ILogger<InitiateCommandExecutionCommand> {
+        public List<(LogLevel Level, string Message)> Entries { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            => Entries.Add((logLevel, formatter(state, exception)));
     }
 }
