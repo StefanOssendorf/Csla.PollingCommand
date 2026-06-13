@@ -30,14 +30,11 @@ jobs:
       - name: Pack
         run: dotnet pack src/Ossendorf.Csla.PollingCommand/ --no-build --nologo -o artifacts/ -c Release
 
-      - name: Get NuGet API key (OIDC)
-        id: nuget-key
-        uses: actions/github-script@v7
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
         with:
-          script: |
-            const token = await core.getIDToken('api.nuget.org');
-            core.setSecret(token);
-            core.setOutput('api-key', token);
+          user: ${{ secrets.NUGET_USER }}
 
       - name: Publish NuGet
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.nuget-key.outputs.api-key }} -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
